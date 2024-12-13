@@ -1,0 +1,345 @@
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  H:\N Beaduin - Camera Interval\nbreg_count_results_Dec_11_2024.txt
+  log type:  text
+ opened on:  11 Dec 2024, 13:09:23
+
+. 
+. set more off
+
+. 
+. *Negative BinomialCount Regression
+. 
+. use "H:\N Beaduin - Camera Interval\camera_interval_data_April_18_2024.dta", clear
+
+. 
+. nbreg visitnumber_sum week week2 i.year if time_thresh=="Photo_num"
+
+Fitting Poisson model:
+
+Iteration 0:   log likelihood = -10110.956  
+Iteration 1:   log likelihood = -10010.476  
+Iteration 2:   log likelihood =  -10009.77  
+Iteration 3:   log likelihood =  -10009.77  
+
+Fitting constant-only model:
+
+Iteration 0:   log likelihood = -823.66938  
+Iteration 1:   log likelihood =  -605.7342  
+Iteration 2:   log likelihood = -605.66224  
+Iteration 3:   log likelihood = -605.66222  
+
+Fitting full model:
+
+Iteration 0:   log likelihood = -605.66222  
+Iteration 1:   log likelihood = -598.39635  
+Iteration 2:   log likelihood = -595.52839  
+Iteration 3:   log likelihood = -595.51572  
+Iteration 4:   log likelihood = -595.51571  
+
+Negative binomial regression                    Number of obs     =        159
+                                                LR chi2(4)        =      20.29
+Dispersion     = mean                           Prob > chi2       =     0.0004
+Log likelihood = -595.51571                     Pseudo R2         =     0.0168
+
+---------------------------------------------------------------------------------
+visitnumber_sum |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+----------------+----------------------------------------------------------------
+           week |   .2446736   .0484697     5.05   0.000     .1496747    .3396724
+          week2 |   -.004237     .00079    -5.36   0.000    -.0057853   -.0026887
+                |
+           year |
+          2021  |   .0660167   .4817539     0.14   0.891    -.8782035    1.010237
+          2022  |   .0038916   .4820868     0.01   0.994    -.9409812    .9487644
+                |
+          _cons |   1.208002   .6618122     1.83   0.068    -.0891256    2.505131
+----------------+----------------------------------------------------------------
+       /lnalpha |   1.791251   .1233931                      1.549405    2.033097
+----------------+----------------------------------------------------------------
+          alpha |   5.996948   .7399818                      4.708666    7.637701
+---------------------------------------------------------------------------------
+LR test of alpha=0: chibar2(01) = 1.9e+04              Prob >= chibar2 = 0.000
+
+. predictnl n_photo_num=predict(n) if time_thresh=="Photo_num", ci(n_photo_num_lci n_photo_num_uci)
+(795 missing values generated)
+note: confidence intervals calculated using Z critical values
+
+. 
+. nbreg visitnumber_sum week week2 i.year if time_thresh=="None"
+
+Fitting Poisson model:
+
+Iteration 0:   log likelihood = -815.15253  
+Iteration 1:   log likelihood = -807.41961  
+Iteration 2:   log likelihood = -807.36368  
+Iteration 3:   log likelihood = -807.36366  
+
+Fitting constant-only model:
+
+Iteration 0:   log likelihood = -428.73767  
+Iteration 1:   log likelihood = -369.62702  
+Iteration 2:   log likelihood = -369.60445  
+Iteration 3:   log likelihood = -369.60445  
+
+Fitting full model:
+
+Iteration 0:   log likelihood = -369.60445  
+Iteration 1:   log likelihood =  -368.0018  
+Iteration 2:   log likelihood = -354.05661  
+Iteration 3:   log likelihood = -353.97553  
+Iteration 4:   log likelihood = -353.97542  
+Iteration 5:   log likelihood = -353.97542  
+
+Negative binomial regression                    Number of obs     =        159
+                                                LR chi2(4)        =      31.26
+Dispersion     = mean                           Prob > chi2       =     0.0000
+Log likelihood = -353.97542                     Pseudo R2         =     0.0423
+
+---------------------------------------------------------------------------------
+visitnumber_sum |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+----------------+----------------------------------------------------------------
+           week |   .1999065   .0358852     5.57   0.000     .1295728    .2702401
+          week2 |  -.0036666   .0005902    -6.21   0.000    -.0048234   -.0025098
+                |
+           year |
+          2021  |   .0640885   .3591143     0.18   0.858    -.6397625    .7679395
+          2022  |   .2734731   .3575499     0.76   0.444    -.4273117     .974258
+                |
+          _cons |  -.7479976   .5144329    -1.45   0.146    -1.756268    .2602724
+----------------+----------------------------------------------------------------
+       /lnalpha |   1.057794   .1479425                      .7678322    1.347756
+----------------+----------------------------------------------------------------
+          alpha |   2.880011    .426076                      2.155089     3.84878
+---------------------------------------------------------------------------------
+LR test of alpha=0: chibar2(01) = 906.78               Prob >= chibar2 = 0.000
+
+. predictnl n_visit_num=predict(n) if time_thresh=="None", ci(n_visit_num_lci n_visit_num_uci)
+(795 missing values generated)
+note: confidence intervals calculated using Z critical values
+
+. 
+. nbreg visitnumber_sum week week2 i.year if time_thresh=="min15"
+
+Fitting Poisson model:
+
+Iteration 0:   log likelihood = -573.63837  
+Iteration 1:   log likelihood = -567.95343  
+Iteration 2:   log likelihood = -567.90991  
+Iteration 3:   log likelihood = -567.90989  
+
+Fitting constant-only model:
+
+Iteration 0:   log likelihood = -381.62182  
+Iteration 1:   log likelihood = -341.96134  
+Iteration 2:   log likelihood = -341.92339  
+Iteration 3:   log likelihood = -341.92339  
+
+Fitting full model:
+
+Iteration 0:   log likelihood = -341.92339  
+Iteration 1:   log likelihood = -325.48437  
+Iteration 2:   log likelihood = -322.93421  
+Iteration 3:   log likelihood = -322.91735  
+Iteration 4:   log likelihood = -322.91734  
+
+Negative binomial regression                    Number of obs     =        159
+                                                LR chi2(4)        =      38.01
+Dispersion     = mean                           Prob > chi2       =     0.0000
+Log likelihood = -322.91734                     Pseudo R2         =     0.0556
+
+---------------------------------------------------------------------------------
+visitnumber_sum |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+----------------+----------------------------------------------------------------
+           week |   .2140635   .0351604     6.09   0.000     .1451504    .2829767
+          week2 |  -.0039526   .0005868    -6.74   0.000    -.0051028   -.0028025
+                |
+           year |
+          2021  |  -.0023822   .3311285    -0.01   0.994    -.6513821    .6466178
+          2022  |   .2085423   .3232794     0.65   0.519    -.4250736    .8421582
+                |
+          _cons |  -1.172268   .5099488    -2.30   0.022    -2.171749   -.1727865
+----------------+----------------------------------------------------------------
+       /lnalpha |   .8039118   .1620871                      .4862268    1.121597
+----------------+----------------------------------------------------------------
+          alpha |   2.234264   .3621454                      1.626169    3.069752
+---------------------------------------------------------------------------------
+LR test of alpha=0: chibar2(01) = 489.99               Prob >= chibar2 = 0.000
+
+. predictnl n_min15=predict(n) if time_thresh=="min15", ci(n_min15_lci n_min15_uci)
+(795 missing values generated)
+note: confidence intervals calculated using Z critical values
+
+. 
+. nbreg visitnumber_sum week week2 i.year if time_thresh=="min30"
+
+Fitting Poisson model:
+
+Iteration 0:   log likelihood = -505.97996  
+Iteration 1:   log likelihood = -503.21713  
+Iteration 2:   log likelihood =  -503.2134  
+Iteration 3:   log likelihood =  -503.2134  
+
+Fitting constant-only model:
+
+Iteration 0:   log likelihood = -360.49608  
+Iteration 1:   log likelihood = -330.71409  
+Iteration 2:   log likelihood = -330.70181  
+Iteration 3:   log likelihood = -330.70181  
+
+Fitting full model:
+
+Iteration 0:   log likelihood = -330.70181  
+Iteration 1:   log likelihood = -318.88052  
+Iteration 2:   log likelihood = -313.14601  
+Iteration 3:   log likelihood = -313.08298  
+Iteration 4:   log likelihood =  -313.0829  
+Iteration 5:   log likelihood =  -313.0829  
+
+Negative binomial regression                    Number of obs     =        159
+                                                LR chi2(4)        =      35.24
+Dispersion     = mean                           Prob > chi2       =     0.0000
+Log likelihood =  -313.0829                     Pseudo R2         =     0.0533
+
+---------------------------------------------------------------------------------
+visitnumber_sum |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+----------------+----------------------------------------------------------------
+           week |   .1984859   .0341415     5.81   0.000     .1315697    .2654021
+          week2 |  -.0036668   .0005724    -6.41   0.000    -.0047886    -.002545
+                |
+           year |
+          2021  |  -.0062747   .3195453    -0.02   0.984     -.632572    .6200226
+          2022  |   .1750297    .312164     0.56   0.575    -.4368006    .7868599
+                |
+          _cons |  -1.111615   .4935447    -2.25   0.024    -2.078945   -.1442852
+----------------+----------------------------------------------------------------
+       /lnalpha |   .7088464   .1681584                       .379262    1.038431
+----------------+----------------------------------------------------------------
+          alpha |   2.031646   .3416383                      1.461206    2.824781
+---------------------------------------------------------------------------------
+LR test of alpha=0: chibar2(01) = 380.26               Prob >= chibar2 = 0.000
+
+. predictnl n_min30=predict(n) if time_thresh=="min30", ci(n_min30_lci n_min30_uci)
+(795 missing values generated)
+note: confidence intervals calculated using Z critical values
+
+. 
+. nbreg visitnumber_sum week week2 i.year if time_thresh=="min60"
+
+Fitting Poisson model:
+
+Iteration 0:   log likelihood = -455.45363  
+Iteration 1:   log likelihood =  -454.1216  
+Iteration 2:   log likelihood = -454.12146  
+Iteration 3:   log likelihood = -454.12146  
+
+Fitting constant-only model:
+
+Iteration 0:   log likelihood = -342.87907  
+Iteration 1:   log likelihood = -320.73417  
+Iteration 2:   log likelihood = -320.63488  
+Iteration 3:   log likelihood = -320.63487  
+
+Fitting full model:
+
+Iteration 0:   log likelihood = -320.56115  
+Iteration 1:   log likelihood = -320.27194  
+Iteration 2:   log likelihood =  -304.6649  
+Iteration 3:   log likelihood = -304.47186  
+Iteration 4:   log likelihood =  -304.4718  
+Iteration 5:   log likelihood =  -304.4718  
+
+Negative binomial regression                    Number of obs     =        159
+                                                LR chi2(4)        =      32.33
+Dispersion     = mean                           Prob > chi2       =     0.0000
+Log likelihood =  -304.4718                     Pseudo R2         =     0.0504
+
+---------------------------------------------------------------------------------
+visitnumber_sum |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+----------------+----------------------------------------------------------------
+           week |   .1841223   .0333598     5.52   0.000     .1187383    .2495063
+          week2 |   -.003405   .0005613    -6.07   0.000    -.0045051   -.0023048
+                |
+           year |
+          2021  |  -.0115062   .3097578    -0.04   0.970    -.6186203    .5956078
+          2022  |   .1379456   .3027968     0.46   0.649    -.4555252    .7314163
+                |
+          _cons |  -1.042544   .4806666    -2.17   0.030    -1.984633    -.100455
+----------------+----------------------------------------------------------------
+       /lnalpha |   .6229675   .1743105                      .2813252    .9646098
+----------------+----------------------------------------------------------------
+          alpha |   1.864453   .3249937                      1.324884    2.623764
+---------------------------------------------------------------------------------
+LR test of alpha=0: chibar2(01) = 299.30               Prob >= chibar2 = 0.000
+
+. predictnl n_min60=predict(n) if time_thresh=="min60", ci(n_min60_lci n_min60_uci)
+(795 missing values generated)
+note: confidence intervals calculated using Z critical values
+
+. 
+. nbreg visitnumber_sum week week2 i.year if time_thresh=="day1"
+
+Fitting Poisson model:
+
+Iteration 0:   log likelihood =  -193.3023  
+Iteration 1:   log likelihood = -193.30199  
+Iteration 2:   log likelihood = -193.30199  
+
+Fitting constant-only model:
+
+Iteration 0:   log likelihood = -206.64692  
+Iteration 1:   log likelihood = -201.52877  
+Iteration 2:   log likelihood = -201.49725  
+Iteration 3:   log likelihood = -201.49704  
+Iteration 4:   log likelihood = -201.49704  
+
+Fitting full model:
+
+Iteration 0:   log likelihood = -194.33533  
+Iteration 1:   log likelihood = -193.49918  
+Iteration 2:   log likelihood = -193.34277  
+Iteration 3:   log likelihood = -193.30814  
+Iteration 4:   log likelihood = -193.30249  
+Iteration 5:   log likelihood = -193.30175  
+Iteration 6:   log likelihood = -193.30166  
+Iteration 7:   log likelihood = -193.30165  
+
+Negative binomial regression                    Number of obs     =        159
+                                                LR chi2(4)        =      16.39
+Dispersion     = mean                           Prob > chi2       =     0.0025
+Log likelihood = -193.30165                     Pseudo R2         =     0.0407
+
+---------------------------------------------------------------------------------
+visitnumber_sum |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+----------------+----------------------------------------------------------------
+           week |   .1023013   .0271535     3.77   0.000     .0490814    .1555211
+          week2 |  -.0017702   .0004778    -3.70   0.000    -.0027067   -.0008337
+                |
+           year |
+          2021  |   .2233116      .2126     1.05   0.294    -.1933767    .6399999
+          2022  |    .223134   .2124999     1.05   0.294    -.1933583    .6396262
+                |
+          _cons |  -1.405379   .3736525    -3.76   0.000    -2.137724   -.6730335
+----------------+----------------------------------------------------------------
+       /lnalpha |  -5.594961   38.83086                     -81.70204    70.51212
+----------------+----------------------------------------------------------------
+          alpha |   .0037165   .1443166                      3.29e-36    4.20e+30
+---------------------------------------------------------------------------------
+LR test of alpha=0: chibar2(01) = 6.7e-04              Prob >= chibar2 = 0.490
+
+. predictnl n_day1=predict(n) if time_thresh=="day1", ci(n_day1_lci n_day1_uci)
+(795 missing values generated)
+note: confidence intervals calculated using Z critical values
+
+. 
+. twoway(scatter n_photo_num week) (scatter n_visit_num week) (scatter n_min15 week) (scatter n_min30 week) (scatter n_min60 week)(scatter n_day1 week) if year==2022, legend(orde
+> r(1 "Total Image" 2 "Number of visits" 3 "15 min" 4 "30 min" 5 "60 min" 6 "24 hour")) scheme(s1mono) ytitle("Predicted Visits to Mineral Lick")
+
+. *twoway (scatter p_visit_photo week) (scatter p_visit_none week) (scatter p_visit_min15 week) (scatter p_visit_min30 week) (scatter p_visit_min60 week) (scatter p_visit_day1 we
+> ek)if year==2022, legend(order(1 "photo=1" 2 "none=2" 3 "min15=3" 4 "min30=4" 5 "min60=5" 6 "day1=6")) scheme(s1mono)
+. 
+. log close
+      name:  <unnamed>
+       log:  H:\N Beaduin - Camera Interval\nbreg_count_results_Dec_11_2024.txt
+  log type:  text
+ closed on:  11 Dec 2024, 13:09:38
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

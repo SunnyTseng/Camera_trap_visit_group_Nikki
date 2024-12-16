@@ -35,7 +35,15 @@ model_data <- read_csv(here("data", "camera_interval_data_Dec_11_2024.csv")) %>%
          photo_uci = photo_uci/10) %>%
   mutate(raw_count = if_else(threshold == "Photo_num",
                              raw_count/10,
-                             raw_count))
+                             raw_count)) %>%
+  mutate(threshold = factor(threshold,
+                            levels = c("Photo_num", "None", "min15", "min30", "min60", "day1"),
+                            labels = c("No. of images", 
+                                       "None", 
+                                       "15 mins", 
+                                       "30 mins", 
+                                       "1 hour", 
+                                       "1 day")))
 
 # model output from Stata
 model_output <- read_lines(here("data", "nbreg_count_results_Dec_11_2024.txt"))
@@ -61,33 +69,46 @@ fig_visit <- model_data  %>%
   ggplot(aes(x = week, group = threshold, colour = threshold)) +
   
   # main data points and lines
-  geom_point(aes(y = raw_count), data = . %>% filter(threshold == "Photo_num"),
+  geom_point(aes(y = raw_count), data = . %>% filter(threshold == "No. of images"),
              colour = "black", size = 4, alpha = 0.2) +
-  geom_line(aes(y = p, linetype = threshold), data = . %>% filter(threshold == "Photo_num"), 
+  geom_line(aes(y = p, linetype = threshold), data = . %>% filter(threshold == "No. of images"), 
             colour = "black", linewidth = 2, alpha = 0.7) +
-  geom_point(aes(y = raw_count), data = . %>% filter(threshold != "Photo_num"),
+  geom_point(aes(y = raw_count), data = . %>% filter(threshold != "No. of images"),
              size = 4, alpha = 0.2) +
-  geom_line(aes(y = p), data = . %>% filter(threshold != "Photo_num"),
+  geom_line(aes(y = p), data = . %>% filter(threshold != "No. of images"),
             linewidth = 2, alpha = 0.7) + 
   
   # arrange the axis, text, and mapped items
   scale_colour_brewer(palette = "Dark2") +
   scale_linetype_manual(values = "dashed",
                         name = NULL) +
-  scale_y_continuous(name = "No. of visits",
-                     sec.axis = sec_axis(trans =~ . * 10, name = "No. of images"),
+  scale_y_continuous(name = "No. of Visits",
+                     sec.axis = sec_axis(trans =~ . * 10, name = "No. of Images"),
                      limits = c(0, 13)) +
-  labs(x = "Week of a year") +
+  scale_x_continuous(breaks = seq(0, 50, by = 10)) +
+  labs(x = "Week of the Year",
+       colour = "Threshold") +
   
   # format the theme
   theme_bw() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom",
+        axis.text = element_text(size = 12),    
+        axis.title = element_text(size = 14),       
+        legend.text = element_text(size = 12),     
+        legend.title = element_text(size = 14),
+        axis.title.x = element_text(margin = margin(t = 5)),
+        axis.title.y = element_text(margin = margin(r = 5)),
+        axis.title.y.right = element_text(margin = margin(l = 5))) 
   
-
 fig_visit
 
-  
-  
+ggsave(
+  filename = here("docs", "CRI_visit.png"),
+  plot = fig_visit,
+  width = 20, 
+  height = 12,   
+  dpi = 300,
+  units = "cm")
 
 
 
@@ -95,19 +116,58 @@ fig_visit
 
 # figure for the coefficients ---------------------------------------------
 
-table_start <- which(str_detect(stata_output, "visitnumber_sum \\|"))
-table_end <- which(str_detect(stata_output, "alpha \\|")) - 1
-coeff_table <- stata_output[table_start:table_end]
+coef_table <- tibble(threshold = c("No. of images", "None", 
+                                   "15 mins", "30 mins", "1 hour", "1 day"),
+                     
+                     week_coef = c(.2446736, .1999065, .2140635, .1984859, .1841223, .1023013),
+                     week_low = c(.1496747, .1295728, .1451504, .1315697, .1187383, .0490814),
+                     week_high = c(.3396724, .2702401, .2829767, .2654021, .2495063, .1555211),
+                     
+                     week2_coef = c(-.004237, -.0036666, -.0039526, -.0036668, -.003405, -.0017702),
+                     week2_low = c(-.0057853, -.0048234, .0005868, -.0047886, -.0045051, -.0027067),
+                     week2_high = c(-.0026887, -.0025098, -.0028025, -.002545, -.0023048, -.0008337)) %>%
+  mutate(threshold = factor(threshold, levels = c("No. of images", "None", "15 mins", 
+                                                  "30 mins", "1 hour", "1 day")))
 
 
-# Convert the table into a tibble
-coeff_df <- coeff_table %>%
-  str_trim() %>%
-  str_split_fixed("\\s+\\|\\s+", n = 2) %>%
-  as_tibble() %>%
-  rename(Variable = V1, Values = V2) %>%
-  separate(Values, into = c("Coef", "Std_Err", "z", "P", "Conf_Lower", "Conf_Upper"), sep = "\\s+", convert = TRUE)
 
-# Convert numeric columns to appropriate types
-coeff_df <- coeff_df %>%
-  mutate(across(Coef:Conf_Upper, as.numeric))
+fig_coef <- coef_table %>%
+  mutate(coef_type = ifelse(week_coef > 0, "Week", "Week squared")) %>%
+  mutate(coef_type = factor(coef_type, levels = c("Week", "Week squared"))) %>%
+
+  # main data points and lines
+  ggplot(aes(y = threshold)) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_errorbarh(aes(xmin = week_low, xmax = week_high), height = 0.2, size = 1, alpha = 0.5) +
+  geom_errorbarh(aes(xmin = week2_low, xmax = week2_high), height = 0.2, size = 1, alpha = 0.5) +
+  geom_point(aes(x = week_coef, shape = "Week"), size = 4, alpha = 0.8) +
+  geom_point(aes(x = week2_coef, shape = "Week squared"), size = 4, alpha = 0.8) +
+  
+  # arrange the axis, text, and mapped items
+  labs(x = "Coefficient", y = "", shape = "Variable") +  
+  guides(shape = guide_legend(position = "inside")) +
+  
+  # format the theme
+  theme_bw() +
+  theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        axis.title.x = element_text(margin = margin(t = 5)),
+        legend.position.inside = c(0.86, 0.85))  
+
+fig_coef
+
+ggsave(
+  filename = here("docs", "CRI_coef.png"),
+  plot = fig_coef,
+  width = 18, 
+  height = 10,   
+  dpi = 300,
+  units = "cm")
+
+
+
+
+
+
+
+

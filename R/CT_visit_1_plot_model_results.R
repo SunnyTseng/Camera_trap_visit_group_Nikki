@@ -57,25 +57,33 @@ fig_visit <- model_data  %>%
          uci = map_dbl(data, ~ .x$uci %>% mean())) %>%
   select(-data) %>%
   
+  # start the ggplot
   ggplot(aes(x = week, group = threshold, colour = threshold)) +
+  
+  # main data points and lines
   geom_point(aes(y = raw_count), data = . %>% filter(threshold == "Photo_num"),
              colour = "black", size = 4, alpha = 0.2) +
-  geom_line(aes(y = p), data = . %>% filter(threshold == "Photo_num"), 
-            colour = "black", linetype = 5, linewidth = 2, alpha = 0.7) +
+  geom_line(aes(y = p, linetype = threshold), data = . %>% filter(threshold == "Photo_num"), 
+            colour = "black", linewidth = 2, alpha = 0.7) +
   geom_point(aes(y = raw_count), data = . %>% filter(threshold != "Photo_num"),
              size = 4, alpha = 0.2) +
   geom_line(aes(y = p), data = . %>% filter(threshold != "Photo_num"),
             linewidth = 2, alpha = 0.7) + 
   
-  ylim(0, 13) +
-  labs(x = "Week of a year",
-       y = "Number of visits") +
+  # arrange the axis, text, and mapped items
   scale_colour_brewer(palette = "Dark2") +
+  scale_linetype_manual(values = "dashed",
+                        name = NULL) +
+  scale_y_continuous(name = "No. of visits",
+                     sec.axis = sec_axis(trans =~ . * 10, name = "No. of images"),
+                     limits = c(0, 13)) +
+  labs(x = "Week of a year") +
   
-  theme_bw() 
-
-
+  # format the theme
+  theme_bw() +
+  theme(legend.position = "bottom")
   
+
 fig_visit
 
   
